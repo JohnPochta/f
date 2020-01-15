@@ -135,8 +135,3 @@ class Migration(db.Model):
 		self.log = log
 		self.result = result
 		self.userid = userid
-
-if __name__ == '__main__':
-	admin = User.query.filter_by(name = 'xuz')
-	admin.id = uuid.uuid1()
-	db.session.commit()
