@@ -33,8 +33,8 @@ def populate_tables():
 	populate()
 
 db.init_app(app)
-# create_tables()
-# populate_tables()
+create_tables()
+populate_tables()
 
 @app.context_processor
 def utility_processor():

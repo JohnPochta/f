@@ -6,7 +6,7 @@ def populate():
     db.session.add(admin)
     user = User('Ivan', 'ivan1@pochta.ua', '12345678', False)
     db.session.add(user)
-    user1 = User('Ivan', 'ivan1@pochta.ua', '12345678', False)
+    user1 = User('Ivan', 'ivan2@pochta.ua', '12345678', False)
     db.session.add(user1)
     db.session.commit()
     bigint = DataType('postgresql', 'bigint', 'bigint')
