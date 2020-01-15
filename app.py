@@ -172,6 +172,18 @@ def edit():
             flash('<br>'.join(['<br>'.join(e) for e in form.errors.values()]))
     return render_template('edit.html', form = form, user = user)
 
+@app.route('/delete-migration', methods=['GET', 'POST'])
+def deleteMigration():
+    form = EditForm()
+    if not current_user.isadmin:
+        return """STOP!"""
+    id = request.args.get('id')
+    user = User.query.filter_by(id = current_user.id).first()
+    db.session.query(Migration).filter(Migration.id == id).delete()
+    db.session.commit()
+    user.is_active = True
+    login_user(user)
+    return redirect(url_for('user', id = user.id))
 
 
 @app.route('/logout', methods=['GET'])
@@ -208,7 +220,7 @@ def signup():
 def user():
     user_id = request.args.get('id')
     user = User.query.filter_by(id = user_id).first()
-    migrations = Migration.query.filter_by(userid = user_id).all()
+    migrations = Migration.query.filter_by(userid = user_id).all() if not user.isadmin else Migration.query.filter_by().all()
 
     form = CreateUserFrom() if user.isadmin else None
     users = User.query.filter_by().all() if user.isadmin else None

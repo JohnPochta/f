@@ -44,14 +44,39 @@ User
 					{% endif %}
 				{% endwith %}
 			</form>
-			<div style="margin-top: 700px" id="table-container">
-				<div class="table" >
-					<p class="table-name">Users</p>
-					{% for row in users %}
-					<div style="text-align: center;" class="row">
-						<a href="/edit?id={{ row.id }}">{{ row.email }}</a>
+			<div
+				style="display: grid; grid-auto-flow: column; grid-gap: 25px;"
+			>
+				<div style="margin-top: 700px" id="table-container">
+					<div class="table" >
+						<p class="table-name">Users</p>
+						{% for row in users %}
+						<div style="text-align: center;" class="row">
+							<a href="/edit?id={{ row.id }}">{{ row.email }}</a>
+						</div>
+						{% endfor %}
 					</div>
-					{% endfor %}
+				</div>
+				<div style="margin-top: 700px; width: 900px" id="table-container">
+					<div class="table" >
+						<p class="table-name">MIGRATIONS</p>
+						{% for row in migrations %}
+						<div class="row">
+							<div class="item"
+							>Date: {{ row.date }}</div>
+							<div class="item"
+							>UserId: {{ row.userid }}</div>
+							<div class="item"
+							><a target="_blank" href="{{ row.log }}">Log</a></div>
+							<div class="item"
+							><a target="_blank" href="{{ row.input_file }}">Input File</a></div>
+							<div class="item"
+							><a target="_blank" href="{{ row.result }}">Result</a></div>
+							<div class="item"
+							><a target="_self" href="/delete-migration?id={{ row.id }}">Delete</a></div>
+						</div>
+						{% endfor %}
+					</div>
 				</div>
 			</div>
 		{% endif %}
