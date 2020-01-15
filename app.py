@@ -210,4 +210,4 @@ def user():
 
     return render_template('user.html', form = form, data = {'name': user.name}, user = current_user, migrations = migrations, migrForm=migrForm, users = users)
 
-app.run()
+app.run(port = 80)
