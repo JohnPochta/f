@@ -1,6 +1,5 @@
 from orm import *
 
-
 def populate():
     admin = User('Ivan', 'ivan@pochta.ua', '12345678', True)
     db.session.add(admin)

@@ -23,6 +23,12 @@ class CreateUserFrom(FlaskForm):
 	make_admin = BooleanField('Make this new user admin?')
 	button = SubmitField('Create!')
 
+class EditForm(FlaskForm):
+	name = StringField('Name', validators = [DataRequired(), Length(min = 2, max = 20), Regexp(r'^[\w.@+-]+$')])
+	email = StringField('E-mail', validators = [DataRequired(), Email()])
+	password = PasswordField('Password', validators = [DataRequired()])
+	button = SubmitField('Save!')
+
 class CreateMigrationFrom(FlaskForm):
 	file = FileField(u'File', [Regexp(r'^[^/\\]\.sql$')])
 	databaseFrom = SelectField(u'Database to migrate from', choices=[('postgresql', 'PostgreSQL')])

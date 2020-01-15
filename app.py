@@ -1,5 +1,5 @@
 from flask import render_template, url_for, redirect, request, flash, Blueprint
-from forms import SignUpFrom, LogInFrom, CreateUserFrom, CreateMigrationFrom
+from forms import SignUpFrom, LogInFrom, CreateUserFrom, CreateMigrationFrom, EditForm
 from orm import *
 import re
 from flask_login import LoginManager, login_user, logout_user, current_user
@@ -7,6 +7,7 @@ import os
 from werkzeug.utils import secure_filename
 from flask.cli import with_appcontext
 import click
+from wtforms import SubmitField
 
 UPLOAD_FOLDER = '/tmp/'
 ALLOWED_EXTENSIONS = {'sql'}
@@ -144,10 +145,34 @@ def login():
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
+    form = EditForm()
+    if not current_user.isadmin:
+        return """STOP!"""
+    user_id = request.args.get('id')
+    user = User.query.filter_by(id = user_id).first()
     if (request.method == 'GET'):
-        user_id = request.args.get('id')
-        user = User.query.filter_by(id = user_id).first()
-        return render_template('login.html', form = form)
+        form.name.default = user.name
+        form.password.default = user.password
+        form.email.default = user.email
+        form.process()
+        return render_template('edit.html', form = form, user = user)
+    else:
+        if form.validate_on_submit():
+            name = request.form.get('name')
+            password = request.form.get('password')
+            user = User.query.filter_by(email = user.email).first()
+            user.name = name
+            user.password = password
+            db.session.commit()
+            flash('User saved!')
+            current_user.is_active = True
+            login_user(current_user)
+            return render_template('edit.html', form = form, user = user)
+        else:
+            flash('<br>'.join(['<br>'.join(e) for e in form.errors.values()]))
+    return render_template('edit.html', form = form, user = user)
+
+
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -188,7 +213,6 @@ def user():
     form = CreateUserFrom() if user.isadmin else None
     users = User.query.filter_by().all() if user.isadmin else None
     migrForm = CreateMigrationFrom() if not user.isadmin else None
-    print(users)
     if form:
         if form.validate_on_submit():
             name = request.form.get('name')
